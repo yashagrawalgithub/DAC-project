@@ -1,0 +1,157 @@
+{% extends "base.html" %} {% block title %}Top Level Dashboard{% endblock %} {%
+block content %}
+<div class="dashboard-card">
+  <h2>Top Level Dashboard</h2>
+  <p class="text-muted">You have full control over the system.</p>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="dashboard-card">
+        <h4>Your Data</h4>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in data %}
+              <tr>
+                <td>{{ item['id'] }}</td>
+                <td>{{ item['data'] }}</td>
+                <td>
+                  <div class="btn-group">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-secondary dropdown-toggle"
+                      data-bs-toggle="dropdown"
+                    >
+                      Grant Access
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <form
+                          method="POST"
+                          action="{{ url_for('top_grant_to_medium') }}"
+                        >
+                          <input
+                            type="hidden"
+                            name="data_id"
+                            value="{{ item['id'] }}"
+                          />
+                          <button type="submit" class="dropdown-item">
+                            To Medium Level
+                          </button>
+                        </form>
+                      </li>
+                      <li>
+                        <form
+                          method="POST"
+                          action="{{ url_for('top_grant_to_low') }}"
+                        >
+                          <input
+                            type="hidden"
+                            name="data_id"
+                            value="{{ item['id'] }}"
+                          />
+                          <button type="submit" class="dropdown-item">
+                            To Low Level
+                          </button>
+                        </form>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="dashboard-card">
+        <h4>Current Grants to Medium Level</h4>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for grant in grants_to_medium %}
+              <tr>
+                <td>{{ grant['id'] }}</td>
+                <td>{{ grant['data'] }}</td>
+                <td>
+                  <form
+                    method="POST"
+                    action="{{ url_for('top_revoke_from_medium') }}"
+                    class="d-inline"
+                  >
+                    <input
+                      type="hidden"
+                      name="grant_id"
+                      value="{{ grant['id'] }}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      Revoke
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="dashboard-card mt-4">
+        <h4>Current Grants to Low Level</h4>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for grant in grants_to_low %}
+              <tr>
+                <td>{{ grant['id'] }}</td>
+                <td>{{ grant['data'] }}</td>
+                <td>
+                  <form
+                    method="POST"
+                    action="{{ url_for('top_revoke_from_low') }}"
+                    class="d-inline"
+                  >
+                    <input
+                      type="hidden"
+                      name="grant_id"
+                      value="{{ grant['id'] }}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      Revoke
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

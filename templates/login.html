@@ -1,0 +1,43 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
+%}
+<div class="login-page">
+  <div class="login-container">
+    <h1 class="system-title">DAC System</h1>
+
+    <div class="login-box">
+      <h2 class="login-heading">Sign in</h2>
+
+      <p class="new-user">
+        New user? <a href="#" class="create-account">Create an account</a>
+      </p>
+
+      <form method="POST" action="{{ url_for('login') }}">
+        <div class="form-group">
+          <label for="username" class="form-label">Email address</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            value=""
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-login">Continue</button>
+      </form>
+
+      <p class="copyright">© 2025 Yash Agrawal & Yash Arora</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

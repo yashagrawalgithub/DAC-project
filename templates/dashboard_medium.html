@@ -1,0 +1,129 @@
+{% extends "base.html" %} {% block title %}Medium Level Dashboard{% endblock %}
+{% block content %}
+<div class="dashboard-card">
+  <h2>Medium Level Dashboard</h2>
+  <p class="text-muted">
+    You can manage access to data granted to you by Top level.
+  </p>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="dashboard-card">
+        <h4>Your Accessible Data</h4>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Owner</th>
+                <th>Access</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in data %}
+              <tr>
+                <td>{{ item['id'] }}</td>
+                <td>{{ item['data'] }}</td>
+                <td>
+                  <span class="access-badge badge-{{ item['owner_level'] }}"
+                    >{{ item['owner_level'] }}</span
+                  >
+                </td>
+                <td>
+                  {% if item['access_granted_to'] %}
+                  <span
+                    class="access-badge badge-{{ item['access_granted_to'] }}"
+                    >{{ item['access_granted_to'] }}</span
+                  >
+                  {% else %}
+                  <span class="text-muted">Owned by you</span>
+                  {% endif %}
+                </td>
+                <td class="action-buttons">
+                  {% if item['access_granted_to'] == 'medium' and
+                  item['owner_level'] == 'top' %} {% if item['id'] in
+                  granted_to_low %}
+                  <form
+                    method="POST"
+                    action="{{ url_for('medium_revoke_from_low') }}"
+                    class="d-inline"
+                  >
+                    <input
+                      type="hidden"
+                      name="grant_id"
+                      value="{{ granted_to_low[item['id']] }}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      Revoke from Low
+                    </button>
+                  </form>
+                  {% else %}
+                  <form
+                    method="POST"
+                    action="{{ url_for('medium_grant_to_low') }}"
+                    class="d-inline"
+                  >
+                    <input
+                      type="hidden"
+                      name="data_id"
+                      value="{{ item['id'] }}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-success">
+                      Grant to Low
+                    </button>
+                  </form>
+                  {% endif %} {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="dashboard-card">
+        <h4>Your Current Grants to Low Level</h4>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Grant ID</th>
+                <th>Data</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for grant in medium_grants_to_low %}
+              <tr>
+                <td>{{ grant['grant_id'] }}</td>
+                <td>{{ grant['data'] }}</td>
+                <td>
+                  <form
+                    method="POST"
+                    action="{{ url_for('medium_revoke_from_low') }}"
+                    class="d-inline"
+                  >
+                    <input
+                      type="hidden"
+                      name="grant_id"
+                      value="{{ grant['grant_id'] }}"
+                    />
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      Revoke
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
